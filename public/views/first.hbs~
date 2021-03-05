@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <ul>
+      {{#each animal}}
+      <li>{{this}}</li>
+      {{/each}}
+    </ul>
+  </body>
+</html>

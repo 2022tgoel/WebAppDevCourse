@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>
+      First page
+    </h1>
+    <h3>
+      Epoch: {{epoch}}
+    </h3>
+    
+    <ul>
+      {{#each animal}}
+      <li>{{this}}</li>
+      {{/each}}
+    </ul>
+    <p>I'm thinking of a number between one and ten... (hint, it's {{rand}})</p>
+    <a href='/'>home</a>
+    <br />
+    <hr />
+    <i>
+      {{month}}{{year}}
+    </i>
+    
+  </body>
+</html>

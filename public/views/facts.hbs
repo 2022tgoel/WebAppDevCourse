@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>
+      Facts about ... {{topic}}
+    </h1>
+    <ul>
+      {{#each facts}}
+      <li>{{this}}</li>
+      {{/each}}
+    </ul>
+    <h2>{{error}}</h2>
+    <form action="/facts" method="GET">
+      <label>Topic:</label>
+      <input type="text" name="topic" id="topic">
+      <label>Number of facts:</label>
+      <input type="text" name="num" id="num">
+      <button>Update</button>
+    </form>
+    <br />
+    <hr />
+  </body>
+</html>

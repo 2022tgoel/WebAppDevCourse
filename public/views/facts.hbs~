@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>
+      Here are {{num}} facts about {{topic}}
+    </h1>
+    <ul>
+      {{#each facts}}
+      <li>{{this}}</li>
+      {{/each}}
+    </ul>
+    <br />
+    <hr />
+  </body>
+</html>

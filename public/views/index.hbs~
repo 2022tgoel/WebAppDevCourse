@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1> Hello from {{name}}
+    </h1>
+    <ul>
+      <li>
+	<a href='/first'>first</a>
+      </li>
+      <li>page</li>
+      <li>
+	<a href='/cat'>cat</a>
+      </li>
+      <li>
+	<a href='/dog'>dog</a>
+      </li>
+      <li>
+	<a href='/fish'>fish</a>
+      </li>
+      <li>query</li>
+      <li>
+	<a href='/pet?type=cat'>cat</a>
+      </li>
+      <li>
+	<a href='/pet?type=dog'>dog</a>
+      </li>
+      <li>
+	<a href='/pet?type=fish'>fish</a>
+      </li>
+      <li>
+	<a href='/facts?num=1&topic=red'>learn about red</a>
+      </li>
+    </ul>
+    <br />
+    <hr />
+    <i>
+      {{month}} {{year}}
+    </i>
+  </body>
+</html>
+
+      
+	

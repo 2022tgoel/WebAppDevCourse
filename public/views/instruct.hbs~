@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <body>
+  <h1>
+    Dog-Cat-Fish>
+  </h1>
+  <h3>
+    Instructions>
+  </h3>
+  <ul>
+    <li>if you ask for a dog you get a cat</li>
+    <li> if you ask for a cat you get a dog</li>
+    <li>get it?</li>
+    <li>if you ask for pet you get...
+      <ul>
+	<li>dog if type=dog</li>
+	<li>cat if type=cat</li>
+	<li>'undefined' otherwise</li>
+      </ul>
+    </li>
+    <li> if you ask for fish you get this page</li>
+  </ul>
+  <a href='/home'>home</a>
+  <br />
+  <hr />
+  <i>{{month}} 2021</i>
+  </body>
+</html>
