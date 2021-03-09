@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<h2>Astronomy Picture of the day from NASA</h2>
+<ul>
+  <li> <b>Date:</b> {{date}} </li>
+  <li> <b>Explanation:</b> {{explanation}} </li>
+  <li> <b>Title:</b> {{title}} </li>
+  <img src={{url}} width="500" height="400">
+</ul>
+
+<form action="/apod/" method="GET">
+	<label>Change date:</label>
+	<input type="date" name="date" id="date">
+	<button>Go to new date</button>
+</form>
