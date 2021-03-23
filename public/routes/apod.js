@@ -7,9 +7,12 @@ module.exports.run_setup = (app) => {
     app.get('/apod', (req, res) => {
 		var obj = {};
 		let rawData = '';
-		let date = req.query.date;
-		console.log(date);
-		https.get(url+'&date='+date, (response) => {
+		let get = url;
+		if (req.query.date!=undefined){
+			let date = req.query.date;
+			get = url+'&date='+date
+		}
+		https.get(get, (response) => {
 		    console.log('statusCode:', response.statusCode);
 		    response.on('data', (d) => {
 				rawData += String.fromCharCode.apply(null, d);
