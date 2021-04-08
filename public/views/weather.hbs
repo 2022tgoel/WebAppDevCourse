@@ -1,9 +1,24 @@
 <!DOCTYPE html>
-<h2>Astronomy Picture of the day from NASA</h2>
-<ul>
-  <li> </li>
-</ul>
-
+<h2>Weather Forecast</h2>
+<table border="1" cellpadding="15">
+	<tr>
+		<td><b>Time</b></td>
+	    <td><b>Temp</b></td>
+	    <td><b>Wind</b></td>
+	    <td><b>Sky</b></td>
+	</tr>
+	{{#each periods}}
+	<tr>
+		<td><b>{{startTime}}</b></td>
+	    <td><b>{{temperature}}&#730;{{temperatureUnit}}</b></td>
+	    <td><b>{{windDirection}} at {{windSpeed}}</b></td>
+	    <td><b>
+	    	{{shortForecast}}
+	    	<img src={{icon}}>
+	    </b></td>
+	</tr>
+	{{/each}}
+</table>
 <form action="/weather/" method="GET">
 	<label>New Latitude:</label>
 	<input type="number" name="lat" id="lat">
