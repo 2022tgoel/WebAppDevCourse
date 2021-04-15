@@ -1,11 +1,6 @@
-var cookieSession = require('cookie-session') ;
+
 
 module.exports.run_setup = app => {
-	app.use(cookieSession({
-		name : 'cookie',
-		keys : ['keys']
-	}));
-
 	app.get('/cookie', (req, res) => {
 		if ('reset' in req.query || !('visit_count' in req.session)){
 			req.session.visit_count = 1;
