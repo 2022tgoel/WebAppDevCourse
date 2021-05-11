@@ -28,84 +28,92 @@ var login_url = client.authorizeURL({
 });
 
 module.exports.run_setup = (app) => {
-	app.get('/login', [get_code, handle_code, get_api_data]);
-	app.get('/user', [handle_params, display])
+    app.get('/login', [get_code, handle_code, get_api_data]);
+    app.get('/user', [upd_redirect, handle_params, display])
 }
 
 function get_code(req, res, next){
     console.log(req.query.code);
-	if (!('code' in req.query)){
-		res.redirect(login_url);
-	}
-	else{
-		next();
-	}
+    if (!('code' in req.query)){
+        res.redirect(login_url);
+    }
+    else{
+        next();
+    }
 
 }
 async function handle_code(req, res, next){
-	var code = req.query.code;
-	const tokenParams = {
-		code: code,
-		redirect_uri: ion_redirect_uri,
-		scope : 'read'
-	};
-	console.log(tokenParams.code);
+    var code = req.query.code;
+    const tokenParams = {
+        code: code,
+        redirect_uri: ion_redirect_uri,
+        scope : 'read'
+    };
+    console.log(tokenParams.code);
     try {
-    	req.session.accessToken = await client.getToken(tokenParams);
-    	console.log(req.session.accessToken);
-    	next();
-    	
+        req.session.accessToken = await client.getToken(tokenParams);
+        console.log(req.session.accessToken);
+        next();
+        
     }
     catch (err){
         console.log(err);
-    	obj = {'msg' : 'Access Token Error'}
-    	res.render('error', obj);
+        obj = {'msg' : 'Access Token Error'}
+        res.render('error', obj);
     }
 
 }
 
 function get_api_data(req, res, next){
-	var profile_url = 'https://ion.tjhsst.edu/api/profile?format=json&access_token='+req.session.accessToken.token.access_token;
+    var profile_url = 'https://ion.tjhsst.edu/api/profile?format=json&access_token='+req.session.accessToken.token.access_token;
     console.log(profile_url);
-	var options = { headers : { 'User-Agent' : 'request' } } ;
-	https.get(profile_url, options, function(response) {
-		var rawData = '';
-		response.on('data', function(chunk) {
-			rawData += chunk;
-		});
-		response.on('end', function() {
-		    try {
-		        var obj = JSON.parse(rawData);
-    			req.session.name = obj.display_name;
-    		    res.redirect(hostname + '/user');
-		    }
-		    catch (e){
-		        console.error(e);
-        	    obj = {'msg' : 'Sorry, we could not log you in because there was an issue fetching API data'};
-        	    res.render('error', obj);
-		    }
-			
-		});
+    var options = { headers : { 'User-Agent' : 'request' } } ;
+    https.get(profile_url, options, function(response) {
+        var rawData = '';
+        response.on('data', function(chunk) {
+            rawData += chunk;
+        });
+        response.on('end', function() {
+            try {
+                var obj = JSON.parse(rawData);
+                req.session.name = obj.display_name;
+                if (req.session.redirect_login === undefined){
+                    res.redirect('/');
+                }
+                else res.redirect(req.session.redirect_login);
+            }
+            catch (e){
+                console.error(e);
+                obj = {'msg' : 'Sorry, we could not log you in because there was an issue fetching API data'};
+                res.render('error', obj);
+            }
+            
+        });
     
     }).on('error', (e) =>{
         console.error(e);
-	    obj = {'msg' : 'Sorry, we could not log you in because there was an issue fetching API data'};
-	    res.render('error', obj);
+        obj = {'msg' : 'Sorry, we could not log you in because there was an issue fetching API data'};
+        res.render('error', obj);
     });
+}
+
+function upd_redirect(req, res, next){
+    req.session.redirect_login = '/user' // where it redirects after login
+    next();
 }
 
 function handle_params(req, res, next){
     req.obj = {}
     if ('reset' in req.query || !('ion_count' in req.session)){
-		req.session.ion_count = 1;
-	}
-	else {
-	    req.session.ion_count++;
-	}
-	if ('logout' in req.query){
-	    delete req.session.name;
-	}
-	if (req.session.name !== undefined){
+        req.session.ion_count = 1;
+    }
+    else {
+        req.session.ion_count++;
+    }
+    if ('logout' in req.query){
+        delete req.session.name;
+    }
+    if (req.session.name !== undefined){
         req.obj.name = req.session.name;
     }
     else req.obj.name = 'you';

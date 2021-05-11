@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<div id="holder">
+<head>
+	<title>Simple Quiz Game</title>
+	<style type="text/css">
+	    html {
+            padding-top: 50px;
+	    }
+		#pseudoButtons li {
+			float: left;
+			list-style: none;
+			text-align: center;
+			background-color: #D3D3D3;
+			margin-right: 30px;
+			width: 150px;
+			line-height: 50px;
+		}
+		#footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+	</style>
+</head>
+<body>
+	<div id="main_section">
+		<h3>I am thinking of a random number - pick one!!!</h3>
+		<ul id="pseudoButtons">
+			<li my_data = 1>One</li>
+			<li my_data = 2>Two</li>
+			<li my_data = 3>Three</li>
+			<li my_data = 4>Four</li>
+			<li my_data = 5>Five</li>
+			<li my_data = 6>Six</li>
+			<li my_data = 7>Seven</li>
+			<li my_data = 8>Eight</li>
+		</ul>
+	</div>
+	<div id="resp_section">
+		<span id="response"></span>
+	</div>	
+	<div id="footer">
+	    <hr>
+	    <a href='/game'>Play Again!</a>
+	</div>
+
+	<script type="text/javascript">
+
+		// get all the ul elements
+		var nl_button_list = document.querySelectorAll('#pseudoButtons > li');
+
+		// convert them into an array
+		var ar_button_list = Array.from(nl_button_list);
+
+		// assign an event listener to each (recall that forEach is a better for loop)
+		ar_button_list.forEach( function(elem){
+			elem.addEventListener("click", btn_click);
+		})
+
+		// this is the click event function
+		function btn_click() {
+			if (game_object.done) {
+				return;
+			}
+			var choice = this.getAttribute('my_data');
+			var response_elem = document.getElementById('response');
+			if (choice == game_object.correct_answer){
+				response_elem.innerHTML = "Correct! You Won! It took you " + game_object.attempts + " tries."
+				this.style['background-color'] = "green"
+				game_object.done = true;
+			}
+			else {
+				response_elem.innerHTML = "Wrong! :( Try Again."
+				this.style['background-color'] = "red"
+				game_object.attempts+=1;
+			}
+		}
+
+		var game_object = {'correct_answer' : null, 'done' : false, 'attempts' : 1};
+		var tried = false;
+		var choices = ar_button_list.map((elem) => {
+			return elem.getAttribute('my_data');
+		});
+		game_object.correct_answer = choices[Math.floor(Math.random()*choices.length)];
+	</script>
+</body>
+</html>
