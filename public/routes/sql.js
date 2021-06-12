@@ -1,17 +1,16 @@
 var mysql = require('mysql')
 var sql_params = {
-  connectionLimit : 10,
-  user            : "site_2843",
-  password        : "9FbpvVj4e1hPQg2WOQxBLvKvjv3NpvqzNXhZ3HYUwi2mVAoRwd",
-  host            : "director-mysql",
-  port            : "3306",
-  database        : "site_2843"
+   host   : process . env . DIRECTOR_DATABASE_HOST ,
+   user   : process . env . DIRECTOR_DATABASE_USERNAME ,
+   password : process . env . DIRECTOR_DATABASE_PASSWORD ,
+   database : process . env . DIRECTOR_DATABASE_NAME,
+   connectionLimit : 10,
 }
 
 var pool  = mysql.createPool(sql_params);
 
 module.exports.run_setup = (app) => {
-	app.get('/sqlgame', [init, update_last, get_and_display]);
+    app.get('/sqlgame', [init, update_last, get_and_display]);
 }
 
 function init(req, res, next){
@@ -19,34 +18,34 @@ function init(req, res, next){
     if ('id' in req.session && 'name' in req.session){
         next();
     }
-	else {
-	    obj = {};
-	    obj.name = 'you';
-	    obj.highScore = "none, you are not logged in";
-	    res.render('sqlGame', obj);
-	}
+    else {
+        obj = {};
+        obj.name = 'you';
+        obj.highScore = "none, you are not logged in";
+        res.render('sqlGame', obj);
+    }
         
 }
 
 function update_last(req, res, next){
     if('last' in req.query){
-	    update(req.session.id, req.query.last, (err) => {
-	        if (err) throw err;
-	        next();
-	    });
-	}
-	else next();
+        update(req.session.id, req.query.last, (err) => {
+            if (err) throw err;
+            next();
+        });
+    }
+    else next();
 }
 
 function get_and_display(req, res, next){
     obj = {};
     obj.name = req.session.name;
     get_high_score(req.session.id, (err, score) => {
-	    if (err) throw err;
-	    obj.highScore = score;
-	    console.log(obj.highScore);
-	    res.render('sqlGame', obj);
-	});
+        if (err) throw err;
+        obj.highScore = score;
+        console.log(obj.highScore);
+        res.render('sqlGame', obj);
+    });
 }
 
 function update(id, score, callback){
@@ -63,14 +62,24 @@ function update(id, score, callback){
     });
       
 }
-function get_high_score(id, callback) {
-    //get the current person's high score
-    query = "SELECT score FROM sqlgame WHERE id=" + id;
-    pool.query(query, function(error, results, fields) {
-        if (error) return callback(error);
-        console.log(results);
-        console.log(results[0]);
-        console.log(results[0].score);
-        callback(null, results[0].score); 
+
+function get_high_score(id, callback){
+    qry = "SELECT score FROM sqlgame WHERE id=" + id;
+    console.log(qry);
+    pool.getConnection(function(err, connection){
+        console . log( '*** connection . state == ' , connection . state ) ;
+        if(err){
+            return callback(err);
+        }
+        connection.query(qry, function(err, results){
+            if (err) throw err;
+            connection.release();
+            if (results.length> 0){
+                callback(null, results[0].score);
+            }
+            else {
+                callback(null, Infinity);
+            }
+        });
     });
 }
